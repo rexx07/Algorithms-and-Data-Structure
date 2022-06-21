@@ -1,0 +1,1506 @@
+Bitcoin was the first application of blockchain technology, and has started a revolution with the
+introduction of the very first fully decentralized digital currency. It has proven to be remarkably
+secure and valuable as a digital currency; however, it is quite unstable and highly volatile. The
+invention of Bitcoin has also sparked a great interest in academic and industrial research and
+opened up many new research areas. In this chapter, we shall introduce Bitcoin in detail.
+Specifically, in this chapter, we will focus our attention upon the fundamentals of Bitcoin, how
+transactions are constructed and used, transaction structures, addresses, accounts, and mining,
+over the following topic areas:
+•
+Bitcoin—an overview
+•
+Cryptographic keys
+•
+Transactions
+•
+Blockchain
+•
+Mining
+Let's begin with an overview of Bitcoin.
+Bitcoin—an overview
+Since its introduction in 2008 by Satoshi Nakamoto, Bitcoin has gained immense popularity and
+is currently the most successful digital currency in the world, with billions of dollars invested in
+it. The current market cap at the time of writing for this currency is 168,923,803,898 USD.
+Its popularity is also evident from the high number of users and investors, the increasing
+price of Bitcoin, daily news related to Bitcoin, and the many start-ups and companies that are
+offering Bitcoin-based online exchanges. It is now also traded as Bitcoin futures on the Chicago
+Mercantile Exchange (CME).
+Introducing Bitcoin
+[ 184 ]
+It is built on decades of research in the field of cryptography, digital cash, and distributed
+computing. In the following section, a brief history is presented to provide the background
+required to understand the foundations behind the invention of Bitcoin.
+Digital currencies have always been an active area of research for many decades. Early
+proposals to create digital cash go as far back as the early 1980s. In 1982, David Chaum, a
+computer scientist and cryptographer, proposed a scheme that used blind signatures to build
+an untraceable digital currency. This research was published in a research paper entitled Blind
+signatures for untraceable payments. We covered this history in Chapter 1, Blockchain 101, which
+readers can review if required.
+In this scheme, a bank would issue digital money by signing a blind and random serial number
+presented to it by the user. The user could then use the digital token signed by the bank as
+currency. The limitation of this scheme was that the bank had to keep track of all used serial
+numbers. This was a centralized system by design and required a trusted party such as a bank
+to operate.
+Later on, in 1988, David Chaum et al. proposed a refined version named eCash that not only
+used blind signatures, but also some private identification data to craft a message that was then
+sent to the bank.
+This scheme allowed the detection of double-spending, but did not prevent it. If the same token
+were used at two different locations, then the identity of the double-spender would be revealed.
+Also, this eCash scheme could only represent a fixed amount of money.
+Adam Back, a cryptographer and current CEO of Blockstream, who is involved in Blockchain
+development, introduced hashcash in 1997. It was initially proposed to thwart email spam.
+The idea behind hashcash was to solve a computational puzzle that was easy to verify but
+comparatively difficult to compute. The idea was that for a single user and a single email, the
+extra computational effort was negligible, but someone sending a large number of spam emails
+would be discouraged as the time and resources required to run the spam campaign would
+increase prohibitively.
+Interested readers can read more about Bitcoin futures at http://www.
+cmegroup.com/trading/bitcoin-futures.html.
+Interested readers can read the original research paper in which David
+Chaum invented the cryptographic primitive of blind signatures at
+http://www.hit.bme.hu/~buttyan/courses/BMEVIHIM219/2009/
+Chaum.BlindSigForPayment.1982.PDF.
+The original research paper for this is available at
+http://citeseerx.ist.psu.edu/viewdoc/
+summary?doi=10.1.1.26.5759.
+Chapter 6
+[ 185 ]
+In 1998, Wei Dai, a computer engineer who used to work for Microsoft, proposed b-money,
+which introduced the idea of using Proof of Work (PoW) to create money. The term PoW
+emerged and got popular later with Bitcoin, but in Wei Dai's b-money, a scheme of creating
+money was introduced by providing a solution to a previously unsolved computational
+problem. This concept is similar to PoW, where the money is created by broadcasting the
+solution to a previously unsolved computational problem.
+A significant weakness in the system was that an adversary with higher computational power
+could generate unsolicited money without allowing the network to adjust to an appropriate
+difficulty level. The system lacked details on the consensus mechanism between nodes and
+some security issues such as Sybil attacks were also not addressed. At the same time, Nick
+Szabo, a computer scientist, introduced the concept of BitGold, which was also based on the
+PoW mechanism but had the same problems as b-money, with the exception that the network
+difficulty level was adjustable. Tomas Sander and Amnon Ta-Shma at the International
+Computer Science Institute, Berkley, introduced an e-cash scheme in a research paper named
+Auditable, Anonymous Electronic Cash in 1999. This scheme, for the first time, used Merkle trees to
+represent coins and zero-knowledge proofs to prove the possession of coins.
+In this scheme, a central bank was required that kept a record of all used serial numbers.
+This scheme allowed users to be fully anonymous. This was a theoretical design that was not
+practical to implement due to inefficient proof mechanisms.
+RPOW (Reusable Proof of Work) was introduced in 2004 by Hal Finney, a computer scientist,
+developer, and the first person to receive Bitcoin from Satoshi Nakamoto. It used the hashcash
+scheme by Adam Back as a proof of computational resources spent to create the money. This
+was also a central system that kept a central database to keep track of all used PoW tokens.
+This was an online system that used remote attestation, made possible by a trusted computing
+platform (TPM hardware).
+All the previously mentioned schemes are intelligently designed but had weaknesses in one
+aspect or another. Specifically, all these schemes rely on a central server that is required to be
+trusted by the users.
+Having covered some of the fundamentals of Bitcoin, let's talk about how Bitcoin started.
+The original paper on b-money is available here: http://www.weidai.
+com/bmoney.txt.
+The original research paper, Auditable, Anonymous Electronic Cash, is
+available at http://www.cs.tau.ac.il/~amnon/Papers/ST.crypto99.
+pdf.
+Introducing Bitcoin
+[ 186 ]
+The beginnings of Bitcoin
+In 2008, Bitcoin was introduced in a paper called Bitcoin: A Peer-to-Peer Electronic Cash System.
+Satoshi Nakamoto wrote the Bitcoin paper. The name of the author is believed to be a
+pseudonym, as the true identity of the inventor of Bitcoin is unknown and is the subject of much
+speculation. The first key idea introduced in the paper was of a purely peer-to-peer electronic
+cash that does need an intermediary bank to transfer payments between peers.
+Bitcoin is built on decades of research. Various ideas and techniques from cryptography and
+distributed computing such as Merkle trees, hash functions, and digital signatures were used
+to design Bitcoin. Other ideas such as BitGold, b-money, hashcash, and cryptographic time-
+stamping also provided some groundwork for the invention of Bitcoin. Ideas from many of
+these developments were ingeniously used in Bitcoin to create the first ever truly decentralized
+currency. Bitcoin solves a number of historically difficult problems related to electronic cash and
+distributed systems, including:
+•
+The Byzantine generals problem
+•
+The double-spending problem
+•
+Sybil attacks
+Bitcoin is an elegant solution to the Byzantine generals problem and the double-spending
+problem. We examined both of these concepts in Chapter 1, Blockchain 101.
+A Sybil attack is a type of attack where a single adversary creates a large number of nodes with
+fake identities on the network, which are used to gain influence over the network. This attack is
+also prevented in Bitcoin by using PoW, where miners are required to consume a considerable
+amount of computing power to earn rewards. If fake nodes try to add fake blocks to the Bitcoin
+blockchain, they will be rejected because those blocks will not have the required amount of
+work, that is, the PoW, associated with them. For an adversary to add a fake block, they will
+have to work at the same difficulty level as the other honest miners and compete honestly;
+otherwise, their work (as long as they do not control more than 51% of the network) will always
+be rejected by the network due to the insufficient amount of work performed to create blocks.
+Bitcoin is currently the most valuable cryptocurrency. The value of Bitcoin fluctuates quite
+heavily but has increased quite significantly over time, as shown in the following graph:
+This paper is available at https://Bitcoin.org/Bitcoin.pdf.
+Chapter 6
+[ 187 ]
+Figure 6.1: Bitcoin price trend since mid-2017
+Before we talk about the specifics of Bitcoin, let's briefly discuss the philosophy behind it, go
+over the official definition of Bitcoin, and consider Bitcoin from a user's perspective before
+delving deeper into the topic in later sections.
+Egalitarianism versus authoritarianism
+For people with a libertarian ideology, Bitcoin is a platform that can be used instead of banks.
+However, some think that due to regulations, Bitcoin may become another institution that
+cannot be trusted. The original idea behind Bitcoin was to develop an e-cash system, which
+requires no trusted third party and where users can be anonymous. If regulations require
+checks like Know Your Customer (KYC) and detailed information about business transactions
+to facilitate the regulatory process, then it might be too much information to share. As a result,
+Bitcoin may not remain attractive to some entities.
+The regulation of Bitcoin is a controversial subject. As much as it is a libertarian's dream, law
+enforcement agencies, governments, and banks are proposing various regulations to control
+it. One prime example is the BitLicense, issued by New York State's Department of Financial
+Services, which is a permit issued to businesses that perform activities related to virtual
+currencies. Due to the high cost and stringent regulatory requirements to obtain a BitLicense,
+many companies have withdrawn their services from New York.
+Introducing Bitcoin
+[ 188 ]
+There are now many initiatives being taken to regulate Bitcoin, cryptocurrencies, and related
+activities such as Initial Coin Offerings (ICOs). The Securities and Exchange Commission
+(SEC) has recently announced that digital tokens, coins, and relevant activities such as ICOs fall
+under the category of securities. This announcement means that any digital currency trading
+platforms will now need to be registered with the SEC and all relevant securities' laws and
+regulations will be applicable to them. This situation impacted the Bitcoin price directly, and it
+fell almost 10% on the day this announcement was made. Bitcoin has even been made illegal in
+some countries.
+At this point, the question arises that if Bitcoin is under so much pressure from regulatory
+bodies, then how it has managed to grow so significantly? The simple answer is due to its
+decentralized and trustless nature. In this context, the term trustless refers to the distribution
+of trust between users, rather than a central entity. No single entity can control this network,
+and even if some entities try to enforce some regulations, they can only go so far because the
+network is owned collectively by its users instead of a single entity. It also protected by its PoW
+mechanism, which thwarts any adversarial attacks on the network.
+The growth of Bitcoin is also due to the so-called network effect. Also called demand-side
+economies of scale, it is a concept that means that the more users use the network, the more
+valuable it becomes. Over time, an exponential increase has been seen in Bitcoin network
+growth. This increase in the number of users is mostly driven by financial incentives. Also, the
+scarcity of Bitcoin and its built-in inflation control mechanism gives it value, as there are only 21
+million Bitcoins that can ever be mined. Also, the miner reward halves every four years, which
+increases scarcity, and consequently, the demand increases even more.
+Bitcoin?definition
+Bitcoin can be defined in various ways; it's a protocol, a digital currency, and a platform. It is a
+combination of a peer-to-peer network, protocols, and software that facilitates the creation and
+usage of the digital currency. Nodes in this peer-to-peer network talk to each other using the
+Bitcoin protocol.
+Decentralization of currency was made possible for the first time with the invention of Bitcoin.
+Moreover, the double-spending problem was solved in an elegant and ingenious way in Bitcoin.
+The double-spending problem arises when, for example, a user sends coins to two different
+users at the same time and they are verified independently as valid transactions. The double-
+spending problem is resolved in Bitcoin by using a distributed ledger (the blockchain) where
+every transaction is recorded permanently, and by implementing a transaction validation and
+confirmation mechanism. This process will be explained later in the chapter, in the Mining
+section.
+Interested readers can read more about the regulation of Bitcoin and other
+relevant activities at https://cointelegraph.com/tags/Bitcoin-
+regulation.
+Chapter 6
+[ 189 ]
+Bitcoin—A user's perspective
+In this section, we will see how the Bitcoin network looks from a user's point of view — how a
+transaction is made, how it propagates from the user to the network, and how transactions are
+verified and finally accumulated in blocks. We will look at the various actors and components
+of the Bitcoin network. Finally, some discussion on how all actors and components interact with
+each other to form the Bitcoin network will also be provided.
+First, let's see that what the main components of a Bitcoin network are. Bitcoin is composed
+of the elements in the following list. We will further expand on these elements as we progress
+through the chapter:
+•
+Digital keys
+•
+Addresses
+•
+Transactions
+•
+Blockchain
+•
+Miners
+•
+The Bitcoin network
+•
+Wallets (client software)
+Now, we will see how a user utilizes the Bitcoin network. The following example will help you
+to understand how the Bitcoin network looks from the end user's perspective. We will see what
+actors and components are involved in a Bitcoin transaction. One of the most common operations
+is sending funds to someone else; therefore, in the following example, we will see how a payment
+transaction can be sent from one user to another on the Bitcoin network.
+Sending a payment
+This example will demonstrate how money can be sent using the Bitcoin network from one
+user to another. There are several steps that are involved in this process. In this example, we are
+using the Blockchain wallet for mobile devices.
+The steps are described as follows:
+1. First, either the payment is requested from a user who sends their Bitcoin address to
+the sender via email or some other means such as SMS, chat applications, or in fact any
+appropriate communication mechanism. The sender can also initiate a transfer to send
+money to another user. In both cases, the address of the beneficiary is required. As an
+example, the Blockchain wallet is shown in the following screenshot, where a payment
+request is being created:
+Introducing Bitcoin
+[ 190 ]
+Figure 6.2: Bitcoin payment request (using the Blockchain wallet)
+2. The sender either enters the receiver's address or scans the QR code that has the Bitcoin
+address, amount, and an optional description encoded in it. The wallet application
+recognizes this QR code and decodes it into something like:
+"Please send <amount> BTC to address <receiver's Bitcoin address>".
+3. With actual values, this will look like the following:
+"Please send 0.00033324 BTC to address
+1JzouJCVmMQBmTcd8K4Y5BP36gEFNn1ZJ3".
+4. This is also shown in the following screenshot:
+Figure 6.3: Bitcoin payment QR code
+Chapter 6
+[ 191 ]
+The QR code shown in the preceding screenshot is decoded to: bitcoin://1JzouJCVmMQB
+mTcd8K4Y5BP36gEFNn1ZJ3?amount=0.00033324, which can be opened as a URL in a Bitcoin
+wallet.
+5. In the wallet application of the sender, this transaction is constructed by following
+some rules and is then broadcast to the Bitcoin network. This transaction is digitally
+signed using the private key of the sender before broadcasting it. How the transaction
+is created, digitally signed, broadcasted, validated, and added to the block will
+become clear in the following sections. From the user's point of view, once the QR
+code is decoded, the transaction will appear, similar to what is shown in the following
+screenshot:
+Figure 6.4: Sending BTC using the Blockchain wallet
+Note that in the preceding screenshot, there are a number of fields such as From, To,
+BTC, and Fee. While other fields are self-explanatory, it's worth noting that the fee is
+calculated based on size of the transaction and a fee rate, which is a value that depends
+on the volume of the transactions in the network at that time. This is measured in
+Satoshis per byte. Bitcoin network fees ensure that your transaction will be included by
+miners in the block.
+At times in the past, Bitcoin fees were so high that even for smaller transactions, a
+high fee was charged. This was due to the fact that miners are free to choose which
+transactions they pick to verify and add to a block, and they naturally select the ones
+with higher fees. A high number of users creating thousands of transactions also
+played a role in causing this situation of high fees because transactions were competing
+with each other to be picked up first and miners picked up the ones with the highest
+fees. This fee is also usually estimated and calculated by the Bitcoin wallet software
+automatically before sending the transaction. The higher the transaction fee, the greater
+the chances are that your transaction will be picked up as a priority and included in the
+block. This task is performed by the miners. Mining and miners are concepts that we
+will look at a bit later in this chapter in the section about Mining.
+Introducing Bitcoin
+[ 192 ]
+Once the transaction is sent, it will appear in the wallet software as shown in the
+following screenshot:
+Figure 6.5: Transaction sent
+6. At this stage, the transaction has been constructed, signed, and sent out to the Bitcoin
+network. This transaction will be picked up by miners to be verified and included
+in the block. Also note that in the preceding screenshot, confirmation is pending for
+this transaction. These confirmations will start to appear as soon as the transaction is
+verified, included in the block, and mined. Also, the appropriate fee will be deducted
+from the original value to be transferred and will be paid to the miner who has included
+it in the block for mining.
+The transaction flow described in the preceding list is illustrated in the following diagram,
+where a payment of 0.001267 BTC (approximately 11 USD) originated from the sender's
+address and has been paid to the receiver's address (starting with 1Jz). The fee of 0.00010622
+(approximately 95 cents) has also been deducted from the transaction as a mining fee:
+Figure 6.6: Transaction flow visualization (blockchain.info)
+Chapter 6
+[ 193 ]
+The preceding diagram visually shows how the transaction flowed on the network from the
+origin (the sender) to the receivers on the right-hand side.
+A summary view of various attributes of the transaction is shown in the following screenshot:
+Figure 6.7: Snapshot of the transaction taken from blockchain.info
+Looking at the preceding screenshot, there are a number of fields that contain various values.
+Important fields are listed as follows with their purpose and explanation:
+•
+Size: This is the size of the transaction in bytes.
+•
+Weight: This is the new metric given for the block and transaction sizes since the
+introduction of the segregated witness (SegWit) soft fork version of Bitcoin. Please see
+Chapter 7, Bitcoin Network and Payments, for more information on SegWit.
+•
+Received time: This is the time when the transaction was received.
+•
+Included in blocks: This shows the block number on the blockchain in which the
+transaction is included.
+•
+Confirmations: This is the number of confirmations completed by miners for this
+transaction.
+•
+Total input: This is the number of total inputs in the transaction.
+•
+Total output: This is the number of total outputs from the transaction.
+•
+Fees: This is the total fee charged.
+•
+Fee per byte: This field represents the total fee divided by the number of bytes in the
+transaction; for example, 10 Satoshis per byte.
+•
+Fee per weight unit: For legacy transactions, this is calculated using the total number of
+bytes * 4. For SegWit transactions, it is calculated by combining a SegWit marker, flag,
+and witness field as one weight unit, and each byte of the other fields as four weight
+units.
+Introducing Bitcoin
+[ 194 ]
+The transaction ID of this transaction on the Bitcoin network is
+d28ca5a59b2239864eac1c96d3fd1c23b747f0ded8f5af0161bae8a616b56a1d. This can be further
+explored using the following link via the services provided by blockchain.info. This transaction
+ID is available in the wallet software after the transaction has been sent to the network. From
+there, it can be further explored using one of many Bitcoin blockchain explorers available online.
+We are using blockchain.info as an example, which can be found here:
+https://blockchain.info/tx/
+d28ca5a59b2239864eac1c96d3fd1c23b747f0ded8f5af0161bae8a616b56a1d
+Bitcoin transactions are serialized for transmission over the network and encoded in hex format.
+As an example, the transaction shown at the preceding URL is also shown in hex format as
+follows. We will see later, in the Transactions section, how this hex-encoded transaction can be
+decoded and which fields make up a transaction:
+01000000017d3876b14a7ac16d8d550abc78345b6571134ff173918a096ef90ff0430
+e12408b0000006b483045022100de6fd8120d9f142a82d5da9389e271caa3a757b017
+57c8e4fa7afbf92e74257c02202a78d4fbd52ae9f3a0083760d76f84643cf8ab80f5e
+f971e3f98ccba2c71758d012102c16942555f5e633645895c9affcb994ea7910097b7
+734a6c2d25468622f25e12ffffffff022c820000000000001976a914c568ffeb46c6a
+9362e44a5a49deaa6eab05a619a88acc06c0100000000001976a9149386c8c880488e
+80a6ce8f186f788f3585f74aee88ac00000000
+In summary, a payment transaction in the Bitcoin network can be divided into the following
+steps:
+1. The transaction starts with a sender signing the transaction with their private key.
+2. The transaction is serialized so that it can be transmitted over the network.
+3. The transaction is broadcast to the network.
+4. Miners listening for transactions pick up the transaction.
+5. The transaction is verified for its legitimacy by the miners.
+6. The transaction is added to the candidate/proposed block for mining.
+7. Once mined, the result is broadcast to all nodes on the Bitcoin network.
+8. Usually, at this point, users wait for up to six confirmations to be received before a
+transaction is considered final; however, a transaction can be considered final at the
+previous step. Confirmations serve as an additional mechanism to ensure that there is
+probabilistically a very low chance for a transaction to be reverted, but otherwise, once
+a mined block is finalized and announced, the transactions within that block are final at
+that point.
+Mining, transactions, and other relevant concepts will become clearer in the following sections
+in the chapter.
+Bitcoin, being a digital currency, has various denominations, as shown in the following table.
+A sender or receiver can request any amount. The smallest Bitcoin denomination is the Satoshi.
+Bitcoin currency units are described as follows:
+Chapter 6
+[ 195 ]
+Figure 6.8: Bitcoin denominations
+Now, we will introduce the building blocks of Bitcoin. First, we will look at the keys and addresses
+that are used to represent the ownership and transfer of value on the Bitcoin network.
+Cryptographic keys
+On the Bitcoin network, possession of Bitcoins and the transfer of value via transactions are
+reliant upon private keys, public keys, and addresses. Elliptic Curve Cryptography (ECC) is
+used to generate public and private key pairs in the Bitcoin network. We have already covered
+these concepts in Chapter 4, Public Key Cryptography, and here we will see how private and
+public keys are used in the Bitcoin network.
+Private keys in Bitcoin
+Private keys are required to be kept safe and normally reside only on the owner's side. Private
+keys are used to digitally sign the transactions, proving ownership of the bitcoins.
+Private keys are fundamentally 256-bit numbers randomly chosen in the range specified by the
+SECP256K1 ECDSA curve recommendation. Any randomly chosen 256-bit number from 0x1 to
+0xFFFF FFFF FFFF FFFF FFFF FFFF FFFF FFFE BAAE DCE6 AF48 A03B BFD2 5E8C D036 4140 is a
+valid private key.
+Private keys are usually encoded using Wallet Import Format (WIF) in order to make them
+easier to copy and use. It is a way to represent the full-size private key in a different format. WIF
+can be converted into a private key and vice versa. The steps are described here.
+Introducing Bitcoin
+[ 196 ]
+For example, the consider the following private key:
+A3ED7EC8A03667180D01FB4251A546C2B9F2FE33507C68B7D9D4E1FA5714195201
+When converted into WIF format, it looks as shown here:
+L2iN7umV7kbr6LuCmgM27rBnptGbDVc8g4ZBm6EbgTPQXnj1RCZP
+Interested readers can do some experimentation using the tool available at http://gobittest.
+appspot.com/PrivateKey.
+Also, mini private key format is sometimes used to create the private key with a maximum of
+30 characters in order to allow storage where physical space is limited; for example, etching on
+physical coins or encoding in damage-resistant QR codes. The QR code is more damage resistant
+because more dots can be used for error correction and less for encoding the private key.
+A private key encoded using mini private key format is also sometimes called a minikey. The
+first character of the mini private key is always the uppercase letter S. A mini private key can be
+converted into a normal-sized private key, but an existing normal-sized private key cannot be
+converted into a mini private key. This format was used in Casascius physical bitcoins.
+Figure 6.9: A Casascius physical Bitcoin's security hologram paper with mini key and QR code
+QR codes use Reed-Solomon error correction. Discussion on the error
+correction mechanism and its underlying details is out of the scope of this
+book, but interested readers can refer to https://en.wikipedia.org/
+wiki/QR_code#Error_correction for further information.
+Interested readers can find more information at https://en.Bitcoin.t/
+wiki/Casascius_physical_bitcoins.
+Chapter 6
+[ 197 ]
+The Bitcoin core client also allows the encryption of the wallet that contains the private keys.
+As we learned in Chapter 4, Public Key Cryptography, private keys have their own corresponding
+public keys. Public keys on their own are useless and private keys on their own are equally of no
+use. Pairs of public and private keys are required for the normal functioning of any public key
+cryptography-based systems such as the Bitcoin blockchain. In the next section, we introduce
+the usage of public keys in Bitcoin.
+Public keys in Bitcoin
+Public keys exist on the blockchain and all network participants can see them. Public keys are
+derived from private keys due to their special mathematical relationship with those private
+keys. Once a transaction signed with the private key is broadcast on the Bitcoin network, public
+keys are used by the nodes to verify that the transaction has indeed been signed with the
+corresponding private key. This process of verification proves the ownership of the bitcoin.
+Bitcoin uses ECC based on the SECP256K1 standard. More specifically, it makes use of an
+Elliptic Curve Digital Signature Algorithm (ECDSA) to ensure that funds remain secure and
+can only be spent by the legitimate owner. If you need to refresh the relevant cryptography
+concepts, you can refer to Chapter 4, Public Key Cryptography, where ECC was explained. Public
+keys can be represented in uncompressed or compressed format, and are fundamentally x and
+y coordinates on an elliptic curve. In uncompressed format, public keys are presented with a
+prefix of 0x4 in hexadecimal format. x and y coordinates are both 32 bytes in length. In total,
+a compressed public key is 33 bytes long, compared to the 65-byte uncompressed format. The
+compressed version of public keys include only the x part, since the y part can be derived from
+it.
+The reason why the compressed version of public keys works is that if the ECC graph is
+visualized, it reveals that the y coordinate can be either below the x axis or above the x axis, and
+as the curve is symmetric, only the location in the prime field is required to be stored. If y is even
+then its value lies above the x axis, and if it is odd then it is below the x axis. This means that
+instead of storing both x and y as the public key, only x needs to be stored with the information
+about whether y is even or odd.
+Initially, the Bitcoin client used uncompressed keys, but starting from Bitcoin Core client 0.6,
+compressed keys are used as standard. This resulted in an almost 50% reduction of space used
+to store public keys in the blockchain.
+Keys are identified by various prefixes, described as follows:
+•
+Uncompressed public keys use 0x04 as the prefix. Uncompressed public keys are 65
+bytes long. They are encoded as 256-bit unsigned big-endian integers (32 bytes), which
+are concatenated together and finally prefixed with a byte 0x04. This means 1 byte for
+the 0x04 prefix, 32 bytes for the x integer, and 32 bytes for y integer, which makes it 65
+bytes in total.
+•
+Compressed public keys start with 0x03 if the y 32-byte (256-bit) part of the public key is
+odd. It is 33 bytes in length as 1 byte is used by the 0x03 prefix (depicting an odd y) and
+32 bytes for storing the x coordinate.
+Introducing Bitcoin
+[ 198 ]
+•
+Compressed public keys start with 0x02 if the y 32-byte (256-bit) part of the public key is
+even. It is 33 bytes in length as 1 byte is used by the 0x02 prefix (depicting an even y) and
+32 bytes for storing the x coordinate.
+Having talked about private and public keys, let's now move on to another important aspect of
+Bitcoin: addresses derived from public keys.
+Addresses in Bitcoin
+A Bitcoin address is created by taking the corresponding public key of a private key and
+hashing it twice, first with the SHA256 algorithm and then with RIPEMD160. The resultant
+160-bit hash is then prefixed with a version number and finally encoded with a Base58Check
+encoding scheme. The Bitcoin addresses are 26-35 characters long and begin with digits 1 or 3.
+A typical Bitcoin address looks like the string shown here:
+1ANAguGG8bikEv2fYsTBnRUmx7QUcK58wt
+Addresses are also commonly encoded in a QR code for easy distribution. The QR code of the
+preceding Bitcoin address is shown in the following image:
+Figure 6.10: QR code of the Bitcoin address 1ANAguGG8bikEv2fYsTBnRUmx7QUcK58wt
+Currently, there are two types of addresses, the commonly used P2PKH and another P2SH
+type, starting with numbers 1 and 3, respectively. In the early days, Bitcoin used direct Pay-to-
+Pubkey, which is now superseded by P2PKH. These types will be explained later in the chapter.
+However, direct Pay-to-Pubkey is still used in Bitcoin for coinbase addresses. Addresses should
+not be used more than once; otherwise, privacy and security issues can arise. Avoiding address
+reuse circumvents anonymity issues to an extent, but Bitcoin has some other security issues as
+well, such as transaction malleability, Sybil attacks, race attacks, and selfish mining, all of which
+require different approaches to resolve.
+Transaction malleability has been resolved with the so-called SegWit soft-
+fork upgrade of the Bitcoin protocol. This concept will be explained later
+in the chapter.
+Chapter 6
+[ 199 ]
+Figure 6.11: From bitaddress.org, a private key and Bitcoin address in a paper wallet
+Base58Check encoding
+Bitcoin addresses are encoded using the Base58Check encoding. This encoding is used to limit
+the confusion between various characters, such as 0OIl, as they can look the same in different
+fonts. The encoding basically takes the binary byte arrays and converts them into human-
+readable strings. This string is composed by utilizing a set of 58 alphanumeric symbols. More
+explanation and logic can be found in the base58.h source file in the Bitcoin source code:
+/**
+* Why base-58 instead of standard base-64 encoding?
+* - Don't want 0OIl characters that look the same in some fonts and
+* could be used to create visually identical looking data.
+* - A string with non-alphanumeric characters is not as easily accepted as input.
+* - E-mail usually won't line-break if there's no punctuation to break at.
+* - Double-clicking selects the whole string as one word if it's all
+alphanumeric.
+*/
+Now that we have covered private keys, public keys, Base58 encoding, and addresses, with that
+knowledge we can now examine how a Bitcoin address is generated by using all these elements.
+We briefly touched on it when we introduced addresses in Bitcoin earlier, but now we will see
+this in more detail with a diagram.
+The following diagram shows how an address is generated, from generating the private key to
+the final output of the Bitcoin address:
+This file is present in the Bitcoin source code and can be
+viewed at https://github.com/bitcoin/bitcoin/blob/
+c8971547d9c9460fcbec6f54888df83f002c3dfd/src/base58.h.
+Introducing Bitcoin
+[ 200 ]
+Figure 6.12: Address generation in Bitcoin
+In the preceding diagram, there are several steps that we will now explain:
+1. In the first step, we have a randomly generated ECDSA private key.
+2. The public key is derived from the ECDSA private key.
+3. The public key is hashed using the SHA-256 cryptographic hash function.
+4. The hash generated in step 3 is hashed using the RIPEMD-160 hash function.
+5. The version number is prefixed to the RIPEMD-160 hash generated in step 4.
+6. The result produced in step 5 is hashed using the SHA-256 cryptographic hash function.
+7. SHA-256 is applied again.
+8. The first 4 bytes of the result produced from step 7 is the address checksum.
+9. This checksum is appended to the RIPEMD-160 hash generated in step 4.
+10. The resultant byte string is encoded into a Base58-encoded string by applying the Base58
+encoding function.
+11. Finally, the result is a typical Bitcoin address.
+In addition to common types of addresses in Bitcoin, there are some advanced types of
+addresses available in Bitcoin too. We discuss these next.
+Vanity addresses
+As Bitcoin addresses are based on Base58 encoding, it is possible to generate addresses that
+contain human-readable messages. An example is shown as follows—note that in the first line,
+the name BasHir appears:
+Chapter 6
+[ 201 ]
+Figure 6.13: Vanity public address encoded in QR
+Vanity addresses are generated using a purely brute-force method. An example of a paper
+wallet with a vanity address is shown in the following screenshot:
+Figure 6.14: Vanity address generated from https://bitcoinvanitygen.com/
+In the preceding screenshot, on the right-hand bottom corner, the public vanity address is
+displayed with a QR code. The paper wallets can be stored physically as an alternative to the
+electronic storage of private keys.
+Multi-signature addresses
+As the name implies, these addresses require multiple private keys. In practical terms, this
+means that in order to release the coins, a certain set number of signatures is required. This
+is also known as M of N multisig. Here, M represents the threshold or minimum number of
+signatures required from N number of keys to release the Bitcoins.
+Introducing Bitcoin
+[ 202 ]
+Remember that we discussed this concept in Chapter 4, Public Key Cryptography.
+With this section, we've finished our introduction to addresses in Bitcoin. In the next section,
+we will introduce Bitcoin transactions, which are the most fundamental and important aspect of
+Bitcoin.
+Transactions
+Transactions are at the core of the Bitcoin ecosystem. Transactions can be as simple as just
+sending some bitcoins to a Bitcoin address, or can be quite complex, depending on the
+requirements. Each transaction is composed of at least one input and output. Inputs can be
+thought of as coins being spent that have been created in a previous transaction, and outputs as
+coins being created. If a transaction is minting new coins, then there is no input, and therefore
+no signature is needed. If a transaction should send coins to some other user (a Bitcoin address),
+then it needs to be signed by the sender with their private key. In this case, a reference is
+also required to the previous transaction to show the origin of the coins. Coins are unspent
+transaction outputs represented in Satoshis.
+Transactions are not encrypted and are publicly visible on the blockchain. Blocks are made up of
+transactions, and these can be viewed using any online blockchain explorer.
+The transaction lifecycle
+Now, let's look at the lifecycle of a Bitcoin transaction. The steps of the process are as follows:
+1. A user/sender sends a transaction using wallet software or some other interface.
+2. The wallet software signs the transaction using the sender's private key.
+3. The transaction is broadcasted to the Bitcoin network using a flooding algorithm.
+4. Mining nodes (miners) who are listening for the transactions verify and include this
+transaction in the next block to be mined. Just before the transactions are placed in
+the block, they are placed in a special memory buffer called the transaction pool. The
+purpose of the transaction pool is explained in the next section.
+5. Next, the mining starts, which is the process through which the blockchain is secured
+and new coins are generated as a reward for the miners who spend appropriate
+computational resources. Once a miner solves the PoW problem, it broadcasts the newly
+mined block to the network. PoW is explained in detail in the Mining section. The nodes
+verify the block and propagate the block further, and confirmations start to generate.
+6. Finally, the confirmations start to appear in the receiver's wallet and after approximately
+three confirmations, the transaction is considered finalized and confirmed. However,
+three to six is just a recommended number; the transaction can be considered final even
+after the first confirmation. The key idea behind waiting for six confirmations is that the
+probability of double spending is virtually eliminated after six confirmations.
+When a transaction is created by a user and sent to the network, it ends up in a special area on each
+Bitcoin software client. This special area is called the transaction pool or memory pool.
+Chapter 6
+[ 203 ]
+Transaction pool
+Also known as memory pools, these pools are basically created in local memory (computer
+RAM) by nodes (Bitcoin clients) in order to maintain a temporary list of transactions that have
+not yet been added to a block. Miners pick up transactions from these memory pools to create
+candidate blocks. Miners select transactions from the pool after they pass the verification and
+validity checks. The selection of which transactions to choose is based on the fee and their place
+in the order of transactions in the pool. Miners prefer to pick up transactions with higher fees.
+To send transactions on the Bitcoin network, the sender needs to pay a fee to the miners. This fee
+is an incentive mechanism for the miners.
+Transaction fees
+Transaction fees are charged by the miners. The fee charged is dependent upon the size and
+weight of the transaction. Transaction fees are calculated by subtracting the sum of the inputs
+from the sum of the outputs.
+A simple formula can be used:
+fee = sum(inputs) – sum(outputs)
+The fees are used as an incentive for miners to encourage them to include users' transactions
+in the block the miners are creating. All transactions end up in the memory pool, from where
+miners pick up transactions based on their priority to include them in the proposed block.
+The calculation of priority is introduced later in this chapter; however, from a transaction fee
+point of view, a transaction with a higher fee will be picked up sooner by the miners. There are
+different rules based on which fee is calculated for various types of actions, such as sending
+transactions, inclusion in blocks, and relaying by nodes.
+Fees are not fixed by the Bitcoin protocol and are not mandatory; even a transaction with
+no fee will be processed in due course, but may take a very long time. This is, however, no
+longer practical due to the high volume of transactions and competing investors on the Bitcoin
+network, therefore it is advisable to always provide a fee. The time for transaction confirmation
+usually ranges from 10 minutes to over 12 hours in some cases. Transaction time is dependent
+on transaction fees and network activity. If the network is very busy, then naturally, transactions
+will take longer to process, and if you pay a higher fee then your transaction is more likely to be
+picked by miners first due to the additional incentive of the higher fee.
+A transaction on the Bitcoin network is represented by a data structure that consists of several
+fields. We will now introduce the transaction data structure.
+The transaction data structure
+A transaction at a high level contains metadata, inputs, and outputs. Transactions are combined
+to create a block's body.
+Introducing Bitcoin
+[ 204 ]
+The transaction data structure is shown in the following table:
+Field
+Size
+Description
+Version number
+4 bytes
+Specifies the rules to be used by the miners and nodes
+for transaction processing. There are two versions of
+transactions, that is, 1 and 2.
+Input counter
+1–9 bytes
+The number (a positive integer) of inputs included in the
+transaction.
+List of inputs
+Variable
+Each input is composed of several fields. These include:
+•
+The previous transaction hash
+•
+The index of the previous transaction
+•
+Transaction script length
+•
+Transaction script
+•
+Sequence number
+The first transaction in a block is also called a coinbase
+transaction. It specifies one or more transaction inputs. In
+summary, this field describes which Bitcoins are going to be
+spent.
+Output counter
+1–9 bytes
+A positive integer representing the number of outputs.
+List of outputs
+Variable
+Outputs included in the transaction. This field depicts the
+target recipient(s) of the Bitcoins.
+Lock time
+4 bytes
+This field defines the earliest time when a transaction
+becomes valid. It is either a Unix timestamp or the block
+height.
+The following sample transaction is the decoded transaction from the first example of a payment
+provided at the start of this chapter:
+{
+"lock_time":0,
+"size":226,
+"inputs":[
+{
+"prev_out":{
+"index":139,
+"hash":"40120e43f00ff96e098a9173f14f1371655b3478bc0a558d6dc17a4ab17638
+7d"
+},
+Chapter 6
+[ 205 ]
+"script":"483045022100de6fd8120d9f142a82d5da9389e271caa3a757b01757c8e4fa7
+afbf92e74257c02202a78d4fbd52ae9f3a0083760d76f84643cf8ab80f5ef971e3f98ccba2c-
+71758d012102c16942555f5e633645895c9affcb994ea7910097b7734a6c2d25468622f25e12"
+}
+],
+"version":1,
+"vin_sz":1,
+"hash":"d28ca5a59b2239864eac1c96d3fd1c23b747f0ded8f5af0161bae8a616b56a1d",
+"vout_sz":2,
+"out":[
+{
+"script_string":"OP_DUP OP_HASH160
+c568ffeb46c6a9362e44a5a49deaa6eab05a619a OP_EQUALVERIFY OP_CHECKSIG",
+"address":"1JzouJCVmMQBmTcd8K4Y5BP36gEFNn1ZJ3",
+"value":33324,
+"script":"76a914c568ffeb46c6a9362e44a5a49deaa6eab05a619a88ac"
+},
+{
+"script_string":"OP_DUP OP_HASH160
+9386c8c880488e80a6ce8f186f788f3585f74aee OP_EQUALVERIFY OP_CHECKSIG",
+"address":"1ET3oBGf8JpunjytE7owyVtmBjmvcDycQe",
+"value":93376,
+"script":"76a9149386c8c880488e80a6ce8f186f788f3585f74aee88ac"
+}
+]
+}
+As shown in the preceding decoded transaction, there are a number of structures that make up
+the transaction. All these elements will be described now.
+Metadata
+This part of the transaction contains values such as the size of the transaction, the number of
+inputs and outputs, the hash of the transaction, and a lock_time field. Every transaction has a
+prefix specifying the version number. These fields are shown in the preceding example as lock_
+time, size, and version.
+Inputs
+Generally, each input spends a previous output. Each output is considered an Unspent
+Transaction Output (UTXO) until an input consumes it. A UTXO is an unspent transaction
+output that can be spent as an input to a new transaction.
+Introducing Bitcoin
+[ 206 ]
+The transaction input data structure is explained in the following table:
+Field
+Size
+Description
+Transaction hash
+32 bytes
+The hash of the previous transaction with UTXO
+Output index
+4 bytes
+This is the previous transaction's output index, such as UTXO to
+be spent
+Script length
+1-9 bytes
+Size of the unlocking script
+Unlocking script
+Variable
+Input script (ScriptSig), which satisfies the requirements of the
+locking script
+Sequence number
+4 bytes
+Usually disabled or contains lock time — disabled is represented
+by 0xFFFFFFFF
+In the previous sample decoded transaction, the inputs are defined under the "inputs" : [
+section.
+Outputs
+Outputs have three fields, and they contain instructions for sending bitcoins. The first field
+contains the amount of Satoshis, whereas the second field contains the size of the locking script.
+Finally, the third field contains a locking script that holds the conditions that need to be met in
+order for the output to be spent. More information on transaction spending using locking and
+unlocking scripts and producing outputs is discussed later in this section.
+The transaction output data structure is explained in the following table:
+Field
+Size
+Description
+Value
+8 bytes
+The total number (in positive integers) of Satoshis to be transferred
+Script size
+1 – 9 bytes
+Size of the locking script
+Locking script
+Variable
+Output script (ScriptPubKey)
+In the previous sample decoded transaction, two outputs are shown under the "out":[ section.
+Verification
+Verification is performed using Bitcoin's scripting language, which we will now describe in the
+next section in detail.
+Chapter 6
+[ 207 ]
+The Script language
+Bitcoin uses a simple stack-based language called Script to describe how bitcoins can be spent
+and transferred. It is not Turing complete and has no loops to avoid any undesirable effects of
+long-running/hung scripts on the Bitcoin network. This scripting language is based on a Forth
+programming language-like syntax and uses a reverse polish notation in which every operand
+is followed by its operators. It is evaluated from left to right using a Last in, First Out (LIFO)
+stack.
+Scripts are composed of two components, namely elements and operations. Scripts use various
+operations (opcodes) or instructions to define their operations. Elements simply represent data
+such as digital signatures. Opcodes are also known as words, commands, or functions. Earlier
+versions of the Bitcoin node software had a few opcodes that are no longer used due to bugs
+discovered in their design.
+The various categories of the scripting opcodes are constants, flow control, stack, bitwise logic,
+splice, arithmetic, cryptography, and lock time.
+A transaction script is evaluated by combining ScriptSig and ScriptPubKey. ScriptSig is the
+unlocking script, whereas ScriptPubKey is the locking script. We will now describe how a
+transaction is unlocked and spent:
+•
+ScriptSig is provided by the user who wishes to unlock the transaction
+•
+ScriptPubKey is part of the transaction output and specifies the conditions that need to
+be fulfilled in order to spend the output
+In other words, outputs are locked by the ScriptPubKey (the locking script), which contains the
+conditions that when met, will unlock the output, and the coins can then be redeemed. We will
+see the script execution in detail shortly.
+Commonly used opcodes
+In a computer, an opcode is an instruction to perform some operation. For example, ADD is
+an opcode, which is used for integer addition in Intel CPUs and various other architectures.
+Similarly, in Bitcoin design, opcodes are introduced that perform several operations related to
+Bitcoin transaction verification.
+A description of some of the most commonly used opcodes is listed in the following table,
+extracted from the Bitcoin Developer's Guide:
+All opcodes are declared in the script.h file in the Bitcoin reference
+client source code, available at https://github.com/Bitcoin/Bitcoin/
+blob/0cda5573405d75d695aba417e8f22f1301ded001/src/script/
+script.h#L53.
+Introducing Bitcoin
+[ 208 ]
+Opcode
+Description
+OP_CHECKSIG
+This takes a public key and signature and validates the signature of the hash
+of the transaction. If it matches, then TRUE is pushed onto the stack; otherwise,
+FALSE is pushed.
+OP_EQUAL
+This returns 1 if the inputs are exactly equal; otherwise, 0 is returned.
+OP_DUP
+This duplicates the top item in the stack.
+OP_HASH160
+The input is hashed twice, first with SHA-256 and then with RIPEMD-160.
+OP_VERIFY
+This marks the transaction as invalid if the top stack value is not true.
+OP_EQUALVERIFY
+This is the same as OP_EQUAL, but it runs OP_VERIFY afterward.
+OP_CHECKMULTISIG
+This instruction takes the first signature and compares it against each public
+key until a match is found and repeats this process until all signatures are
+checked. If all signatures turn out to be valid, then a value of 1 is returned as a
+result; otherwise, 0 is returned.
+OP_HASH256
+The input is hashed twice with SHA-256.
+OP_MAX
+This returns the larger value of two inputs.
+There are many opcodes in the Bitcoin scripting language, and covering all of them is out of scope of this
+book. Interested readers can refer to the complete list and relevant details at https://en.Bitcoin.it/
+wiki/Script#Opcodes.
+Now that we've covered the transaction life cycle and data structure, let's move on to talk about
+the types of scripts used to undertake these transactions.
+Types of scripts
+There are various standard scripts available in Bitcoin to handle the verification and value
+transfer from the source to the destination. These scripts range from very simple to quite
+complex depending upon the requirements of the transaction. Standard transaction types are
+discussed here. Standard transactions are evaluated using the IsStandard() and IsStandardTx()
+tests and only those transactions that pass the test are allowed to be broadcasted or mined on
+the Bitcoin network. However, nonstandard transactions are also allowed on the network, as
+long as they pass the validity checks:
+•
+Pay-to-Public-Key Hash (P2PKH): P2PKH is the most commonly used transaction
+type and is used to send transactions to Bitcoin addresses. The format of this type of
+transaction is shown as follows:
+ScriptPubKey: OP_DUP OP_HASH160 <pubKeyHash> OP_EQUALVERIFY OP_CHECKSIG
+ScriptSig: <sig> <pubKey>
+The ScriptPubKey and ScriptSig parameters are concatenated together and executed.
+An example will follow shortly in this section, where this is explained in more detail.
+Chapter 6
+[ 209 ]
+•
+Pay-to-Script Hash (P2SH): P2SH is used in order to send transactions to a script hash
+(that is, addresses starting with 3) and was standardized in BIP16. In addition to passing
+the script, the redeem script is also evaluated and must be valid. The template is shown
+as follows:
+ScriptPubKey: OP_HASH160 <redeemScriptHash> OP_EQUAL
+ScriptSig: [<sig>…<sign>] <redeemScript>
+•
+MultiSig (Pay to MultiSig): The M of N multisignature transaction script is a complex
+type of script where it is possible to construct a script that requires multiple signatures
+to be valid in order to redeem a transaction. Various complex transactions such as
+escrow and deposits can be built using this script. The template is shown here:
+ScriptPubKey: <m> <pubKey> [<pubKey> . . . ] <n> OP_CHECKMULTISIG
+ScriptSig: 0 [<sig > . . . <sign>]
+Raw multisig is obsolete, and multisig is now usually part of the P2SH redeem script,
+mentioned in the previous bullet point.
+•
+Pay to Pubkey: This script is a very simple script that is commonly used in coinbase
+transactions. It is now obsolete and was used in an old version of Bitcoin. The public key
+is stored within the script in this case, and the unlocking script is required to sign the
+transaction with the private key. The template is shown as follows:
+<PubKey> OP_CHECKSIG
+•
+Null data/OP_RETURN: This script is used to store arbitrary data on the blockchain
+for a fee. The limit of the message is 40 bytes. The output of this script is unredeemable
+because OP_RETURN will fail the validation in any case. ScriptSig is not required in this
+case. The template is very simple and is shown as follows:
+OP_RETURN <data>
+The P2PKH script execution is shown in the following diagram:
+Figure 6.15: P2PKH script execution
+Introducing Bitcoin
+[ 210 ]
+In the preceding diagram, we have a standard P2PKH script presented on top, which shows
+both the unlocking (ScriptSig) and locking (ScriptPubKey) parts of the script.
+Recall that in the introduction of the Script language; we mentioned that a Bitcoin script
+is composed of two parts, an unlocking script and a locking script. The unlocking script
+is composed of <sig> and <pubkey> elements, which are part of all transaction inputs. The
+unlocking script satisfies the conditions that are required to consume the output. The locking
+script defines the conditions that are required to be met to spend the bitcoins. Transactions are
+authorized by executing both of these parts collectively.
+Now focusing again on the previous diagram, we see that in the middle we have a visualization
+of the stack where the data elements are pushed and popped from. In the bottom section, we
+show the execution of the script. This diagram shows the step-by-step execution of the script
+with its outcome on the stack.
+Now let's examine how this script is executed:
+1. In the first step of the data elements, <sig> and <pubkey> are placed on the stack.
+2. The stack item at the top <pubkey> is duplicated due to the OP_DUP instruction, which
+duplicates the top stack item.
+3. After this, the instruction OP_HASH160 executes, which produces the hash of <pubkey>,
+which is the top element in the stack.
+4. <pubkeyhash> is then pushed on to the stack. At this stage, we have two hashes on the
+stack: the one that is produced as a result of executing OP_HASH160 on <pubkey> from the
+unlocking script, and the other one provided by the locking script.
+5. Now the OP_EQUALVERIFY opcode instruction executes and checks that whether the top
+two elements (that is, the hashes) are equal or not. If they are equal, the script continues,
+otherwise it fails.
+6. Finally, OP_CHECKSIG executes to check the validity of the signatures of the top two
+elements of the stack. If the signature is valid then the stack will contain the value True
+that is, 1, otherwise False , that is, 0.
+All transactions are encoded into hex format before being transmitted over the Bitcoin network.
+The following sample transaction is shown in hex format, and is retrieved using bitcoin-cli on
+the Bitcoin node running on mainnet by using the following command:
+$ bitcoin-cli getrawtransaction
+"d28ca5a59b2239864eac1c96d3fd1c23b747f0ded8f5af0161bae8a616b56a1d"
+{
+In simple words, locking means providing Bitcoins to somebody, whereas
+unlocking means consuming the acquired Bitcoins.
+Chapter 6
+[ 211 ]
+"result":
+"01000000017d3876b14a7ac16d8d550abc78345b6571134ff173918a096ef90ff043
+0e12408b0000006b483045022100de6fd8120d9f142a82d5da9389e271caa3a757b01
+757c8e4fa7afbf92e74257c02202a78d4fbd52ae9f3a0083760d76f84643cf8ab80f5
+ef971e3f98ccba2c71758d012102c16942555f5e633645895c9affcb994ea7910097b
+7734a6c2d25468622f25e12ffffffff022c820000000000001976a914c568ffeb46c6
+a9362e44a5a49deaa6eab05a619a88acc06c0100000000001976a9149386c8c880488
+e80a6ce8f186f788f3585f74aee88ac00000000",
+"error": null,
+"id": null
+}
+Scripting is quite limited and can only be used to program one thing—the transfer of bitcoins
+from one address to other addresses. However, there is some flexibility possible when creating
+these scripts, which allows for certain conditions to be put on the spending of the bitcoins. This
+set of conditions can be considered a basic form of a financial contract. In other words, we can
+say that there is a basic support for building contracts in Bitcoin. However, it is not same as
+smart contracts, which allow the writing of arbitrary programs on the blockchain.
+We will discuss smart contracts in detail later in Chapter 10, Smart Contracts, but for now, we
+will introduce the concept of contracts in Bitcoin.
+Contracts
+Contracts are Bitcoin scripts that use the Bitcoin blockchain to enforce a financial agreement.
+This is a simple definition but has far-reaching consequences as it allows users to
+programmatically create complex contracts that can be used in many real-world scenarios.
+Contracts allow the development of completely decentralized, independent, and reduced-
+risk platforms by programmatically enforcing different conditions for unlocking the money
+(bitcoins). With the security guarantees provided by the Bitcoin blockchain, it is almost
+impossible to circumvent these conditions.
+Various contracts, such as escrow, arbitration, and micropayment channels, can be built using
+the Bitcoin scripting language. The current implementation of the script language is minimal,
+but it is still possible to develop various types of complex contracts. For example, we could set
+the release of funds to be allowed only when multiple parties sign the transaction, or release the
+funds only after a specific amount of time has elapsed. Both of these scenarios can be realized
+using the multisig and transaction lock time options.
+Even though the scripting language in Bitcoin can be used to create complex contracts, it is quite
+limited and is not at all on par with the smart contracts, which are Turing complete constructs
+and allow arbitrary program development.
+Note that this is the same transaction that was presented as an example at
+the start of this chapter.
+Introducing Bitcoin
+[ 212 ]
+Recently, however, there has some more advancement in this area. A new smart contract
+language for Bitcoin has been announced, called Miniscript, which will be discussed next.
+Miniscript
+This language allows for a more structured approach to writing Bitcoin scripts. Even though
+Bitcoin Script supports combinations of different spending conditions, such as time and hash
+locks, it is not easy to analyze existing scripts or build new complex scripts. Miniscript makes it
+easier to write complex spending rules. It also makes it easier to ascertain the correctness of the
+script.
+Currently, Miniscript supports P2WSH and P2SH-P2WSH, and offers limited support for P2SH.
+Coinbase transactions
+A coinbase transaction or generation transaction is always created by a miner and is the first
+transaction in a block. It is used to create new coins. It includes a special field, also called the
+coinbase, which acts as an input to the coinbase transaction. This transaction also allows up to
+100 bytes of arbitrary data storage.
+A coinbase transaction input has the same number of fields as a usual transaction input, but
+the structure contains the coinbase data size and fields instead of the unlocking script size and
+fields. Also, it does not have a reference pointer to the previous transaction. This structure is
+shown in the following table:
+Field
+Size
+Description
+Transaction hash
+32 bytes
+Set to all zeroes as no hash reference is used
+Output index
+4 bytes
+Set to 0xFFFFFFFF
+Coinbase data length
+1-9 bytes
+2-100 bytes
+Data
+Variable
+Any data
+Sequence number
+4 bytes
+Set to 0xFFFFFFFF
+All transactions in the Bitcoin system go under a validation mechanism. We introduce how
+Bitcoin transactions are validated in the next section.
+More information on Miniscript is available at http://bitcoin.sipa.
+be/miniscript/.
+Chapter 6
+[ 213 ]
+Transaction validation
+This verification process is performed by Bitcoin nodes. There are three main things that nodes
+check when verifying a transaction:
+1. That transaction inputs are previously unspent. This validation step prevents double
+spending by verifying that the transaction inputs have not already been spent by
+someone else.
+2. That the sum of the transaction outputs is not more than the total sum of the transaction
+inputs. However, both input and output sums can be the same, or the sum of the input
+(total value) could be more than the total value of the outputs. This check ensures that
+no new bitcoins are created out of thin air.
+3. That the digital signatures are valid, which ensures that the script is valid.
+Even though transaction construction and validation are generally a secure and sound
+process, some vulnerabilities exist in Bitcoin. We will now introduce some Bitcoin's infamous
+shortcomings.
+Transaction bugs
+The following are two major Bitcoin vulnerabilities that have been infamously exploited.
+Transaction malleability
+Transaction malleability is a Bitcoin attack that was introduced due to a bug in the Bitcoin
+implementation. Due to this bug, it became possible for an adversary to change the transaction
+ID of a transaction, thus resulting in a scenario where it would appear that a certain transaction
+has not been executed.
+This can allow scenarios where double deposits or withdrawals can occur. In other words, this
+bug allows the changing of the unique ID of a Bitcoin transaction before it is confirmed. If the ID
+is changed before confirmation without making the transaction invalid, it would seem that the
+transaction did not occur at all, which can then give the false impression that the transaction has
+not been executed, thus allowing double-deposit or withdrawal attacks.
+Value?overflow
+This incident is one of the most well-known events in Bitcoin history. On 15 August 2010, a
+transaction was discovered that created roughly 184 billion bitcoins. This problem occurred due
+to the integer overflow bug where the amount field in the Bitcoin code was defined as a signed
+integer instead of an unsigned integer. This bug means that the amount can also be negative,
+and resulted in a situation where the outputs were so large that the total value resulted in an
+overflow. To the validation logic in Bitcoin code, all appeared to be correct, and it looked like
+the fee was also positive (after the overflow). This bug was fixed via a soft fork (more on this in
+the Blockchain section) quickly after its discovery.
+Introducing Bitcoin
+[ 214 ]
+Now that we understand the fundamentals of how Bitcoin transactions work, and we appreciate
+some of the security-related aspects of Bitcoin, let's now look at the Bitcoin blockchain, which is
+the foundation of the Bitcoin cryptocurrency.
+Blockchain
+As we discussed in Chapter 1, Blockchain 101, a blockchain is a distributed ledger of transactions.
+Specifically, from Bitcoin's perspective, the blockchain can be defined as a public, distributed
+ledger holding a timestamped, ordered, and immutable record of all transactions on the Bitcoin
+network. Transactions are picked up by miners and bundled into blocks for mining. Each block
+is identified by a hash and is linked to its previous block by referencing the previous block's
+hash in its header.
+The data structure of a Bitcoin block is shown in the following table:
+More information on this vulnerability is available at https://cve.
+mitre.org/cgi-bin/cvename.cgi?name=CVE-2010-5139.
+Security research in general, and specifically in the world of Bitcoin
+(cryptocurrency/blockchain), is a fascinating subject; perhaps some
+readers will look at the vulnerability examples in the following links
+for inspiration and embark on a journey to discover some more
+vulnerabilities.
+An example of a recently resolved critical problem in Bitcoin, which
+remained undiscovered for quite some time, can be found at https://
+Bitcoincore.org/en/2019/11/08/CVE-2017-18350/.
+Another example of a critical inflation and denial-of-service bug, which
+was discovered on September 17, 2018 and fixed rapidly, is detailed at
+https://Bitcoincore.org/en/2018/09/20/notice/.
+Perhaps there are still some bugs that are yet to be discovered!
+Chapter 6
+[ 215 ]
+Field
+Size
+Description
+Block size
+4 bytes
+The size of the block.
+Block header
+80 bytes
+This includes fields from the block header described in the next
+section.
+Transaction counter
+Variable
+The field contains the total number of transactions in the block,
+including the coinbase transaction. Size ranges from 1-9 bytes.
+Transactions
+Variable
+All transactions in the block.
+The block header mentioned in the previous table is a data structure that contains several fields.
+This is shown in the following table:
+Field
+Size
+Description
+Version
+4 bytes
+The block version number that dictates the block validation rules to
+follow.
+Previous block's
+header hash
+32 bytes
+This is a double SHA256 hash of the previous block's header.
+Merkle root hash
+32 bytes
+This is a double SHA256 hash of the Merkle tree of all transactions
+included in the block.
+Timestamp
+4 bytes
+This field contains the approximate creation time of the block in
+Unix-epoch time format. More precisely, this is the time when the
+miner started hashing the header (the time from the miner's location).
+Difficulty target
+4 bytes
+This is the current difficulty target of the network/block.
+Nonce
+4 bytes
+This is an arbitrary number that miners change repeatedly to
+produce a hash that is lower than the difficulty target.
+The following diagram provides a detailed view of the blockchain structure. As shown in the
+following diagram, blockchain is a chain of blocks where each block is linked to its previous
+block by referencing the previous block header's hash. This linking makes sure that no
+transaction can be modified unless the block that records it and all blocks that follow it are also
+modified. The first block is not linked to any previous block and is known as the genesis block:
+Introducing Bitcoin
+[ 216 ]
+Figure 6.16: A visualization of blockchain, block, block header, transactions, and scripts
+The preceding diagram shows a high-level overview of the Bitcoin blockchain. On the left-hand
+side, blocks are shown starting from bottom to top. Each block contains transactions and block
+headers, which are further magnified on the right-hand side. At the top, first, the block header
+is enlarged to show various elements within the block header. Then on the right-hand side, the
+Merkle root element of the block header is shown in magnified view, which shows how Merkle
+root is constructed.
+We have discussed Merkle trees in detail previously. You can refer to Chapter 4, Public Key
+Cryptography, if you need to revise the concept.
+Further down the diagram, transactions are also magnified to show the structure of a transaction
+and the elements that it contains. Also, note that transactions are then further elaborated to
+show what locking and unlocking scripts look like. The size (in bytes) of each field of block,
+header and transaction is also shown as a number under the name of the field.
+Let's move on to discuss the first block in the Bitcoin blockchain: the genesis block.
+The genesis block
+This is the first block in the Bitcoin blockchain. The genesis block was hardcoded in the Bitcoin
+core software. In the genesis block, the coinbase transaction included a comment taken from The
+Times newspaper:
+Chapter 6
+[ 217 ]
+"The Times 03/Jan/2009 Chancellor on brink of second bailout for banks"
+This message is a proof that the first Bitcoin block (genesis block) was not mined earlier than
+January 3rd, 2009. This is because the genesis block was created on January 3rd, 2009 and this
+news excerpt was taken from that day's newspaper.
+The following representation of the genesis block code can be found in the chainparams.cpp file
+available at https://github.com/Bitcoin/Bitcoin/blob/master/src/chainparams.cpp:
+static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits,
+int32_t nVersion, const CAmount& genesisReward)
+{
+const char* pszTimestamp = "The Times 03/Jan/2009 Chancellor on brink of
+second bailout for banks";
+const CScript genesisOutputScript = CScript() << ParseHex("04678afdb0fe554827
+1967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5
+c384df7ba0b8d578a4c702b6bf11d5f") << OP_CHECKSIG;
+return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce,
+nBits, nVersion, genesisReward);
+}
+Bitcoin provides protection against double-spending by enforcing strict rules on transaction
+verification and via mining. Transactions and blocks are added to the blockchain only after the
+strict rule-checking explained in the Transaction validation section on successful PoW solutions.
+Block height is the number of blocks before a particular block in the blockchain. PoW is used
+to secure the blockchain. Each block contains one or more transactions, out of which the first
+transaction is the coinbase transaction. There is a special condition for coinbase transactions that
+prevent them from being spent until at least 100 blocks have passed in order to avoid a situation
+where the block may be declared stale later on.
+Stale and orphan blocks
+Stale blocks are old blocks that have already been mined. Miners who keep working on these
+blocks due to a fork, where the longest chain (main chain) has already progressed beyond those
+blocks, are said to be working on a stale block. In other words, these blocks exist on a shorter
+chain, and will not provide any reward to their miners.
+Orphan blocks are a slightly different concept. Their parent blocks are unknown. As their
+parents are unknown, they cannot be validated. This problem occurs when two or more miners
+discover a block at almost the same time. These are valid blocks and were correctly discovered
+at some point in the past but now they are no longer part of the main chain. The reason why this
+occurs is that if there are two blocks discovered at almost the same time, the one with a larger
+amount of PoW will be accepted and the one with the lower amount of work will be rejected.
+Similar to stale blocks, they do not provide any reward to their miners.
+Introducing Bitcoin
+[ 218 ]
+We can see this concept visually in the following diagram:
+Figure 6.17: Orphan and stale blocks
+In the preceding introduction to stale blocks, we introduced a new term, a fork. A fork is a
+condition that occurs when two different versions of the blockchain exist. It is acceptable in
+some conditions, and detrimental in a few others. There are different types of forks that can
+occur in a blockchain:
+•
+Temporary forks
+•
+Soft forks
+•
+Hard forks
+Because of the distributed nature of Bitcoin, network forks can occur inherently. In cases
+where two nodes simultaneously announce a valid block, it can result in a situation where
+there are two blockchains with different transactions. This is an undesirable situation but
+can be addressed by the Bitcoin network only by accepting the longest chain. In this case, the
+smaller chain will be considered orphaned. If an adversary manages to gain control of 51% of
+the network hash rate (computational power), then they can impose their own version of the
+transaction history.
+Forks in a blockchain can also occur with the introduction of changes to the Bitcoin protocol.
+In the case of a soft fork, a client that chooses not to upgrade to the latest version supporting
+the updated protocol will still be able to work and operate normally. In this case, new and
+previous blocks are both acceptable, thus making a soft fork backward compatible. Miners are
+only required to upgrade to the new soft fork client software in order to make use of the new
+protocol rules. Planned upgrades do not necessarily create forks because all users should have
+updated already.
+A hard fork, on the other hand, invalidates previously valid blocks and requires all users to
+upgrade. New transaction types are sometimes added as a soft fork, and any changes such as
+block structure changes or major protocol changes result in a hard fork.
+Chapter 6
+[ 219 ]
+As Bitcoin evolves and new upgrades and innovations are introduced in it, the version
+associated with blocks also changes. These versions introduce various security parameters and
+new features. The latest Bitcoin block version is 4, which was proposed with BIP65 and has been
+used since Bitcoin Core client 0.11.2. Since the implementation of BIP9, bits in the nVersion field
+are used to indicate soft-fork changes.
+Size of the blockchain
+Bitcoin is an ever-growing chain of blocks and is increasing in size. The current size of the
+Bitcoin blockchain stands at approximately 269 GB. The following figure shows the increase in
+size of the blockchain over time:
+Figure 6.18: Size of Bitcoin blockchain over time
+As the chain grows and more miners are added to the network, the network difficulty also
+increases.
+Network?difficulty
+Network difficulty refers to a measure of how difficult it is to find a new block, or in other
+words, how difficult it is to find a hash below the given target.
+New blocks are added to the blockchain approximately every 10 minutes, and the network
+difficulty is adjusted dynamically every 2,016 blocks in order to maintain a steady addition of
+new blocks to the network.
+Network difficulty is calculated using the following equation:
+Target = Previous target * Time/2016 * 10 minutes
+Details of BIP0065 are available at https://github.com/Bitcoin/bips/
+blob/master/bip-0065.mediawiki.
+Introducing Bitcoin
+[ 220 ]
+Difficulty and target are interchangeable and represent the same thing. The Previous target
+represents the old target value, and Time is the time spent to generate the previous 2,016 blocks.
+Network difficulty essentially means how hard it is for miners to find a new block; that is, how
+difficult the hashing puzzle is now.
+In the next section, mining is discussed, which will explain how the hashing puzzle is solved.
+Mining
+Mining is a process by which new blocks are added to the blockchain. Blocks contain
+transactions that are validated via the mining process by mining nodes on the Bitcoin network.
+Blocks, once mined and verified, are added to the blockchain, which keeps the blockchain
+growing. This process is resource-intensive due to the requirements of PoW, where miners
+compete to find a number less than the difficulty target of the network. This difficulty in finding
+the correct value (also called sometimes the mathematical puzzle) is there to ensure that miners
+have spent the required resources before a new proposed block can be accepted. The miners
+mint new coins by solving the PoW problem, also known as the partial hash inversion problem.
+This process consumes a high amount of resources, including computing power and electricity.
+This process also secures the system against fraud and double-spending attacks while adding
+more virtual currency to the Bitcoin ecosystem.
+Roughly one new block is created (mined) every 10 minutes to control the frequency of
+generation of bitcoins. This frequency needs to be maintained by the Bitcoin network. It is
+encoded in the Bitcoin Core client to control the "money supply."
+Approximately 144 blocks, that is, 1,728 bitcoins, are generated per day. The number of actual
+coins can vary per day; however, the number of blocks remains at an average of 144 per day.
+Bitcoin supply is also limited. In 2140, all 21 million bitcoins will be finally created, and no new
+bitcoins can be created after that. Bitcoin miners, however, will still be able to profit from the
+ecosystem by charging transaction fees.
+Tasks of the miners
+Once a node connects to the Bitcoin network, there are several tasks that a Bitcoin miner
+performs:
+1. Synching up with the network: Once a new node joins the Bitcoin network, it
+downloads the blockchain by requesting historical blocks from other nodes. This
+is mentioned here in the context of the Bitcoin miner; however, this not necessarily a
+task that only concerns miners.
+2. Transaction validation: Transactions broadcast on the network are validated by full
+nodes by verifying and validating signatures and outputs.
+3. Block validation: Miners and full nodes can start validating blocks received by them by
+evaluating them against certain rules. This includes the verification of each transaction
+in the block along with verification of the nonce value.
+4. Create a new block: Miners propose a new block by combining transactions broadcast
+on the network after validating them.
+Chapter 6
+[ 221 ]
+5. Perform PoW: This task is the core of the mining process and this is where miners find a
+valid block by solving a computational puzzle. The block header contains a 32-bit nonce
+field and miners are required to repeatedly vary the nonce until the resultant hash is less
+than a predetermined target.
+6. Fetch reward: Once a node solves the hash puzzle (PoW), it immediately broadcasts
+the results, and other nodes verify it and accept the block. There is a slight chance that
+the newly minted block will not be accepted by other miners on the network due to a
+clash with another block found at roughly the same time, but once accepted, the miner is
+rewarded with 12.5 bitcoins and any associated transaction fees.
+We've discussed the tasks—let's now consider the rewards for performing them.
+Mining rewards
+Miners are rewarded with new coins if and when they discover new blocks by solving the PoW.
+Miners are paid transaction fees in return, for the transactions in their proposed blocks. New
+blocks are created at an approximate fixed rate of every 10 minutes. The rate of creation of new
+bitcoins decreases by 50% every 210,000 blocks, which is roughly every 4 years. When Bitcoin
+started in 2009, the mining reward used to be 50 bitcoins. After every 210,000 blocks, the block
+reward halves. In November 2012 it halved down to 25 bitcoins. Currently, since May 2020, it is
+6.25 bitcoins per block. This mechanism is hardcoded in Bitcoin to regulate and control inflation
+and limit the supply of bitcoins.
+In order for miners to earn the reward, they have to show that they have solved the
+computational puzzle. This is called the PoW.
+Proof of Work
+This is a proof that enough computational resources have been spent in order to build a valid
+block. PoW is based on the idea that a random node is selected every time to create a new block.
+In this model, nodes compete with each other in proportion to their computing capacity, in
+order to be selected. The following equation sums up the PoW requirement in Bitcoin:
+H ( N || P_hash || Tx || Tx || . . . Tx) < Target
+Here, N is a nonce, P_hash is a hash of the previous block, Tx represents transactions in
+the block, and Target is the target network difficulty value. This means that the hash of the
+previously mentioned concatenated fields should be less than the target hash value.
+The only way to find this nonce is the brute force method. Once a certain pattern of a certain
+number of zeroes is met by a miner, the block is immediately broadcast and accepted by other
+miners.
+The mining algorithm
+The mining algorithm consists of the following steps:
+1. The previous block's header is retrieved from the Bitcoin network.
+2. Assemble a set of transactions broadcast on the network into a block to be proposed.
+Introducing Bitcoin
+[ 222 ]
+3. Compute the double hash of the previous block's header, combined with a nonce and
+the newly proposed block, using the SHA256 algorithm.
+4. Check if the resulting hash is lower than the current difficulty level (the target), then
+PoW is solved. As a result of successful PoW, the discovered block is broadcasted to the
+network and miners fetch the reward.
+5. If the resultant hash is not less than the current difficulty level (target), then repeat the
+process after incrementing the nonce.
+As the hash rate of the Bitcoin network increased, the total amount of the 32-bit nonce was
+exhausted too quickly. In order to address this issue, the extra nonce solution was implemented,
+whereby the coinbase transaction is used to provide a larger range of nonces to be searched by
+the miners.
+This process is visualized in the following flowchart:
+Figure 6.19: Mining process
+Mining difficulty increases over time and bitcoins that could once be mined by a single-CPU
+laptop computer now require dedicated mining centers to solve the hash puzzle. The current
+difficulty level can be queried through the Bitcoin command-line interface using the following
+command:
+$ bitcoin-cli getdifficulty
+This generates something like the following:
+12876842089683.48
+Chapter 6
+[ 223 ]
+This number represents the difficulty level of the Bitcoin network. Recall from previous sections
+that miners compete to find a solution to a problem. This number, in fact, shows how difficult
+it is to find a hash lower than the network difficulty target. All successfully mined blocks must
+contain a hash that is less than this target number. This number is updated every 2 weeks or
+2,016 blocks to ensure that on average, the 10-minute block generation time is maintained.
+Bitcoin network difficulty has increased in a roughly exponential fashion. The following graph
+shows this difficulty level over a period of one year:
+Figure 6.20: Mining difficulty since late 2018
+The preceding graph shows the difficulty of the Bitcoin network over last year, and it has
+increased quite significantly. The reason why mining difficulty increases is because, in Bitcoin,
+the block generation time always has to be around 10 minutes. This means that if blocks are
+being mined too quickly because of faster hardware, the difficulty increases accordingly so that
+the block generation time can remain at roughly 10 minutes per block. This phenomenon is also
+true in reverse. If blocks take longer than 10 minutes on average to mine, then the difficulty
+is decreased. The difficulty is calculated every 2,016 blocks (around two weeks) and adjusted
+accordingly. If the previous set of 2,016 blocks were mined in a period of less than two weeks,
+then the difficulty increases. Similarly, if 2,016 blocks were found in more than two weeks
+(bearing in mind that if blocks are mined every 10 minutes, then 2,016 blocks take 2 weeks to be
+mined), then the difficulty is decreased.
+The Bitcoin miners have to calculate hashes to solve the PoW algorithm. If the difficulty goes up
+then a higher hash rate is required to find the blocks. The difficulty increases accordingly if more
+hashing power is added due to more miners joining the network. Now let's explain the hash rate
+in a bit more detail.
+The hash rate
+The hash rate basically represents the rate of hash calculation per second. In other words, this
+is the speed at which miners in the Bitcoin network are calculating hashes to find a block. In the
+early days of Bitcoin, it used to be quite small, as CPUs were used, which are relatively weak
+in mining terms. However, with dedicated mining pools and Application Specific Integrated
+Circuits (ASICs) now, this has gone up exponentially in the last few years. This has resulted in
+increased difficulty in the Bitcoin network.
+Introducing Bitcoin
+[ 224 ]
+The following hash rate graph shows the hash rate increases over time and is currently
+measured in exa-hashes. This means that in 1 second, Bitcoin network miners are computing
+more than 24,000,000,000,000,000,000 hashes per second:
+Figure 6.21: Hashing rate over time (measured in exa-hashes), shown over a period of 1 year
+Mining systems
+Over time, Bitcoin miners have used various methods to mine bitcoins. As the core principle
+behind mining is based on the double SHA256 algorithm, over time, experts have developed
+sophisticated systems to calculate the hash faster and faster. The following is a review of the
+different types of mining methods used in Bitcoin and how they evolved with time.
+CPU
+CPU mining was the first type of mining available in the original Bitcoin client. Users could
+even use laptop or desktop computers to mine bitcoins. CPU mining is no longer profitable and
+now more advanced mining methods such as ASIC-based mining are used. CPU mining only
+lasted for around a year from the introduction of Bitcoin, and soon other methods were explored
+and tried by the miners.
+GPU
+Due to the increased difficulty of the Bitcoin network and the general tendency of finding faster
+methods to mine, miners started to use the GPUs or graphics cards available in PCs to perform
+mining. GPUs support faster and parallelized calculations that are usually programmed using
+the OpenCL language.
+This turned out to be a faster option as compared to CPUs. Users also used techniques such as
+overclocking to gain maximum benefit of the GPU power. Also, the possibility of using multiple
+graphics cards in parallel increased the popularity of graphics cards' usage for Bitcoin mining.
+GPU mining, however, has some limitations, such as overheating and the requirement for
+specialized motherboards and extra hardware to house multiple graphics cards. From another
+angle, graphics cards have become quite expensive due to increased demand and this has
+impacted gamers and graphics software users.
+Chapter 6
+[ 225 ]
+FPGA
+Even GPU mining did not last long, and soon miners found another way to perform mining
+using Field Programmable Gate Arrays (FPGAs). An FPGA is basically an integrated circuit
+that can be programmed to perform specific operations. FPGAs are usually programmed in
+hardware description languages (HDLs), such as Verilog and VHDL. Double SHA256 quickly
+became an attractive programming task for FPGA programmers and several open source
+projects were started too. FPGA offered much better performance compared to GPUs; however,
+issues such as accessibility, programming difficulty, and the requirement for specialized
+knowledge to program and configure FPGAs resulted in a short life for the FPGA era of Bitcoin
+mining.
+Mining hardware such as the X6500 miner, Ztex, and Icarus were developed during the time
+when FPGA mining was profitable. Various FPGA manufacturers, such as Xilinx and Altera,
+produce FPGA hardware and development boards that can be used to program mining
+algorithms. The arrival of ASICs resulted in the quick phasing out of FPGA-based systems for
+mining. It should be noted that GPU mining is still profitable for some other cryptocurrencies
+to some extent, such as Zcoin (https://zcoin.io/guide-on-how-to-mine-zcoin-xzc/), but
+not Bitcoin, because the network difficulty of Bitcoin is so high that only ASICs (specialized
+hardware) running in parallel can produce reasonable profit.
+ASICs
+ASICs were designed to perform SHA-256 operations. These special chips were sold by various
+manufacturers and offered a very high hashing rate. This worked for some time, but due to the
+quickly increasing mining difficulty level, single-unit ASICs are no longer profitable.
+Currently, mining is out of the reach of individuals due to the vast amounts of energy and
+money needed to be spent in order to build a profitable mining platform. Now, professional
+mining centers using thousands of ASIC units in parallel are offering mining contracts to
+users to perform mining on their behalf. There is no technical limitation—a single user can
+run thousands of ASICs in parallel—but it will require dedicated data centers and hardware,
+therefore the cost for a single individual can become prohibitive.
+Examples of these four types of hardware are shown in the following photographs:
+Figure 6.22: Four types of mining hardware (from left to right: a CPU, GPU, FPGA, and an ASIC)
+Introducing Bitcoin
+[ 226 ]
+Mining pools
+A mining pool forms when a group of miners work together to mine a block. The pool manager
+receives the coinbase transaction if the block is successfully mined, and is then responsible for
+distributing the reward to the group of miners who invested resources to mine the block. This is
+more profitable than solo mining, where only one sole miner is trying to solve the partial hash
+inversion function (hash puzzle) because, in mining pools, the reward is paid to each member
+of the pool regardless of whether they (or more specifically, their individual node) solved the
+puzzle or not.
+There are various models that a mining pool manager can use to pay to the miners, such as the
+pay-per-share model and the proportional model. In the pay-per-share model, the mining pool
+manager pays a flat fee to all miners who participated in the mining exercise, whereas in the
+proportional model, the share is calculated based on the amount of computing resources spent
+to solve the hash puzzle.
+Many commercial pools now exist and provide mining service contracts via the cloud and
+easy-to-use web interfaces. The most commonly used ones are AntPool (https://www.antpool.
+com), BTC (https://btc.com), and BTC.TOP (http://www.btc.top). A comparison of the hashing
+power of all major mining pools is shown in the following pie chart:
+Figure 6.23: Mining pools and their hashing power (hash rate) as of late 2019. Source: https://blockchain.info/pools
+Chapter 6
+[ 227 ]
+Mining centralization can occur if a pool manages to control more than 51% of the network by
+generating more than 51% of the hash rate of the Bitcoin network.
+As discussed earlier in the introduction section, a 51% attack can result in successful double-
+spending attacks, and it can impact consensus and in fact, even impose another version of the
+transaction history on the Bitcoin network.
+This event has happened once in Bitcoin history when GHash.IO, a large mining pool, managed
+to acquire more than 51% of the network capacity. Theoretical solutions, such as two-phase
+PoW, have been proposed in academia to disincentivize large mining pools.
+This scheme introduces a second cryptographic puzzle that results in mining pools either
+revealing their private keys or providing a considerable portion of the hash rate of their mining
+pool, thus reducing the overall hash rate of the pool.
+Various types of hardware are commercially available for mining purposes. Currently, the most
+profitable one is ASIC mining, and specialized hardware is available from a number of vendors
+such as Antminer, AvalonMiner, and Whatsminer. Solo mining is not very profitable now,
+unless a vast amount of money and energy is spent to build your own mining rig or even a data
+center. With the current difficulty factor (as of June 2020), if a miner manages to produce a hash
+rate of 60 trillion hashes per second (TH/s), they can hope to make 0.000478 BTC (around $0.01)
+per day, and around $4 a year, which is extremely low compared to the investment required to
+source the equipment that can produce 60 TH/s. Including running costs such as electricity, this
+turns out to be not very profitable at all.
+For example, the Antminer S9 is an efficient ASIC miner that produces a hash power of 13.5
+TH/s and seems like it can produce some profit per day, which is true. However, a single
+Antminer S9 costs around 1,700 GBP, and when combined with the cost of electricity, the return
+on investment is only realized after almost a year's mining, when it produces around 0.3 BTC. It
+may still seem an OK investment, but also think about the fact that the Bitcoin network difficulty
+keeps going up with time, so over a year, it will become more difficult to mine and the mining
+hardware will expend its utility in a few months.
+The race to build efficient miners is on and is only expected to grow. A recent addition to
+the ASIC miners' market is the DragonMint T1 miner (https://halongmining.com/shop/
+dragonmint-16t-miner/), which operates at 16 TH/s.
+The following article describes a two-phase PoW proposal, in order to
+disincentivize large Bitcoin mining pools: http://hackingdistributed.
+com/2014/06/18/how-to-disincentivize-large-bitcoin-mining-
+pools/.
+Introducing Bitcoin
+[ 228 ]
+Summary
+This chapter started with an introduction to Bitcoin and explained how a transaction works
+from the user's point of view. Then, an introduction to transactions from a technical point of
+view was presented. After this, the public and private keys used in Bitcoin were discussed. In
+the next section, we introduced addresses and their different types, followed by a discussion
+on transactions and their types and usage.
+Following on from this, we looked at blockchain, with a detailed explanation of how blockchain
+works and the various components included in the Bitcoin blockchain. In the last few sections of
+the chapter, mining processes and relevant concepts such as hardware systems, their limitations,
+and bitcoin rewards were introduced.
+In the next chapter, we will examine concepts related to the Bitcoin network, its elements, and
+client software tools.
