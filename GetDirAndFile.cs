@@ -1,35 +1,27 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿namespace Algorithms_and_Data_Structure;
 
-namespace Algorithms_and_Data_Structure;
-
-public static class GetDirAndFile
+public class GetDirAndFile
 {
     public static string DataFileDir = @"C:\Users\rexxr\Documents\tutses\Algorithms and Data Structure\data";
-    
-    public static FileInfo[] GetFilesInDir()
+
+    public static FileInfo[]? GetFilesInDir()
     {
         Directory.SetCurrentDirectory(DataFileDir);
-        DirectoryInfo di = new DirectoryInfo(Directory.GetCurrentDirectory());
-        FileInfo[] fileNames = di.GetFiles("*.*");
+        var di = new DirectoryInfo(Directory.GetCurrentDirectory());
+        var fileNames = di.GetFiles("*.*");
 
         return fileNames;
     }
-    
-    public static string[] ReadFile(string filename)
+
+    public static string[]? ReadFile(string filename)
     {
-        string[] lines = null;
-        //string file = filename; //"StringTxt.txt";
-        FileInfo[] files = GetFilesInDir();
+        var lines = Array.Empty<string>();
+        var files = GetFilesInDir();
+        var filePath = DataFileDir;
 
         foreach (var f in files)
-        {
-            if (f.ToString() == filename)
-            {
-                var filePath = DataFileDir;
-                lines = File.ReadAllLines(filePath + f);
-            }
-        }
-        
+            if (f.ToString() == filePath + @"\" + filename)
+                lines = File.ReadAllLines(f.ToString());
         return lines;
-    } 
-}   
+    }
+}
