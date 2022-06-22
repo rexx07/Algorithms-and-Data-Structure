@@ -14,22 +14,32 @@ public class SortingAlgorithm
 {
     public void FindWordCount()
     {
-        var lines = GetDirAndFile.ReadFile("StringText.txt");
-        var wordCountTrack = new Dictionary<string, int>();
-
+        string[]? lines = GetDirAndFile.ReadFile("StringText.txt");
+        Dictionary<string, int> wordCountTrack = new Dictionary<string, int>();
+        
         foreach (var line in lines)
         {
             var words = line.Split(" ");
             var wordCount = 0;
+            
+            string[] checkedWords = Array.Empty<string>();
 
             for (var i = 0; i < words.Length - 1; i++)
-                if (wordCountTrack.TryGetValue(words[i], out wordCount))
-                    wordCountTrack[words[i]] += 1;
-                else
+            {
+                if(wordCountTrack.TryGetValue(words[i], out wordCount))
+                {
+                    wordCountTrack[words[i]] += 1; 
+                }
+                else{
                     wordCountTrack.Add(words[i], 1);
+                }
+            }
         }
-
-
-        foreach (var word in wordCountTrack) Console.WriteLine(word.Key + " -------------- " + word.Value);
-    }
+        
+        
+        foreach (var word in wordCountTrack)
+        {
+            Console.WriteLine(word.Key + " -------------- " + word.Value);   
+        }
+    } 
 }
