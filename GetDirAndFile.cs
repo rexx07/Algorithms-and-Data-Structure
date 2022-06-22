@@ -2,34 +2,32 @@
 
 namespace Algorithms_and_Data_Structure;
 
-public static class GetDirAndFile
+public class GetDirAndFile
 {
     public static string DataFileDir = @"C:\Users\rexxr\Documents\tutses\Algorithms and Data Structure\data";
     
-    public static FileInfo[] GetFilesInDir()
+    public static FileInfo[]? GetFilesInDir()
     {
         Directory.SetCurrentDirectory(DataFileDir);
         DirectoryInfo di = new DirectoryInfo(Directory.GetCurrentDirectory());
         FileInfo[] fileNames = di.GetFiles("*.*");
-
+        
         return fileNames;
     }
     
-    public static string[] ReadFile(string filename)
+    public static string[]? ReadFile(string filename)
     {
-        string[] lines = null;
-        //string file = filename; //"StringTxt.txt";
-        FileInfo[] files = GetFilesInDir();
+        string[]? lines = Array.Empty<string>();
+        FileInfo[]? files = GetFilesInDir();
+        var filePath = DataFileDir;
 
         foreach (var f in files)
         {
-            if (f.ToString() == filename)
+            if (f.ToString() == filePath + @"\" + filename)
             {
-                var filePath = DataFileDir;
-                lines = File.ReadAllLines(filePath + f);
+                lines = File.ReadAllLines(f.ToString());
             }
         }
-        
         return lines;
     } 
 }   
